@@ -18,8 +18,11 @@ import java.util.concurrent.TimeUnit
  *
  * @see ExtendedListener.register
  */
-interface ExtendedListener<in T : Event> : Listener {
-    fun onEvent(event: T)
+public interface ExtendedListener<in T : Event> : Listener {
+    /**
+     * Method invoked when [event] was fired.
+     */
+    public fun onEvent(event: T)
 }
 
 /**
@@ -32,9 +35,9 @@ interface ExtendedListener<in T : Event> : Listener {
  *
  * @see ExtendedListener.register
  */
-inline fun <reified T : Event> listener(
+public inline fun <reified T : Event> listener(
     crossinline action: Listener.(T) -> Unit
-) = object : ExtendedListener<T> {
+): ExtendedListener<T> = object : ExtendedListener<T> {
     override fun onEvent(event: T) {
         action(event)
     }
@@ -50,53 +53,53 @@ inline fun <reified T : Event> listener(
  *
  * @see PluginManager.registerEvent
  */
-inline fun <reified T : Event> Plugin.hear(
+public inline fun <reified T : Event> Plugin.hear(
     priority: EventPriority = EventPriority.NORMAL,
     ignoreCancelled: Boolean = false,
     crossinline action: Listener.(T) -> Unit
-) = listener(action).also { it.register(this, priority, ignoreCancelled) }
+): ExtendedListener<T> = listener(action).also { it.register(this, priority, ignoreCancelled) }
 
 /**
- * Registers an instance of [ExtendedListener] using its designated [EventExecutor].
+ * Registers an instance of [ExtendedListener] using its designated [org.bukkit.plugin.EventExecutor].
  *
  * @see PluginManager.registerEvent
  */
 @Suppress("UNCHECKED_CAST")
-inline fun <reified T : Event> ExtendedListener<T>.register(
+public inline fun <reified T : Event> ExtendedListener<T>.register(
     plugin: Plugin,
     priority: EventPriority = EventPriority.NORMAL,
     ignoreCancelled: Boolean = false
-) = register<T>(plugin, priority, ignoreCancelled) { listener, event ->
+): Unit = register<T>(plugin, priority, ignoreCancelled) { listener, event ->
     (listener as ExtendedListener<T>).onEvent(event as T)
 }
 
 /**
  * Registers a listener - delegates directly to [PluginManager.registerEvent]
  */
-inline fun <reified T : Event> Listener.register(
+public inline fun <reified T : Event> Listener.register(
     plugin: Plugin,
     priority: EventPriority = EventPriority.NORMAL,
     ignoreCancelled: Boolean = false,
     noinline eventExecutor: (Listener, Event) -> Unit
-) = PluginManager.registerEvent(T::class.java, this, priority, eventExecutor, plugin, ignoreCancelled)
+): Unit = PluginManager.registerEvent(T::class.java, this, priority, eventExecutor, plugin, ignoreCancelled)
 
 
 /**
- * Registers a listener via the annotation-based system provided by Bukkit ([EventHandler])
+ * Registers a listener via the annotation-based system provided by Bukkit ([org.bukkit.event.EventHandler])
  *
  * @see PluginManager.registerEvents
  */
-fun Listener.register(plugin: Plugin) = PluginManager.registerEvents(this, plugin)
+public fun Listener.register(plugin: Plugin): Unit = PluginManager.registerEvents(this, plugin)
 
 /**
  * Unregisters a listener from all [HandlerList]s.
  */
-fun Listener.unregister() = HandlerList.unregisterAll(this)
+public fun Listener.unregister(): Unit = HandlerList.unregisterAll(this)
 
 /**
  * The thread pool used for expectation timeout. Must not be shut down if timeouts are used.
  */
-var expectationPool: ScheduledExecutorService = Executors.newSingleThreadScheduledExecutor()
+public var expectationPool: ScheduledExecutorService = Executors.newSingleThreadScheduledExecutor()
 
 /**
  * Creates an expectation, which is met if the specified amount of events
@@ -115,7 +118,7 @@ var expectationPool: ScheduledExecutorService = Executors.newSingleThreadSchedul
  *
  * @return The listener created by this function.
  */
-inline fun <reified T : Event> Plugin.expect(
+public inline fun <reified T : Event> Plugin.expect(
     amount: Int = 1,
     crossinline predicate: (T) -> Boolean = { true },
     timeout: Long = 0,
@@ -143,4 +146,3 @@ inline fun <reified T : Event> Plugin.expect(
     }
     return listener
 }
-

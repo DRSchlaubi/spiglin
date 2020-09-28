@@ -9,15 +9,13 @@ internal val NEW_LINE_SPLIT = "\n".toRegex()
 /**
  * Creates a new [ItemStack] based on the given type and applies the given body to it.
  */
-inline fun item(type: Material, body: ItemStack.() -> Unit) =
+public inline fun item(type: Material, body: ItemStack.() -> Unit): ItemStack =
     ItemStack(type).apply(body)
 
 /**
  * Creates a new [ItemStack] based on another ItemStack and applies the given body to it.
- *
- * @param interactive Whether this item should be an instance
  */
-inline fun item(copy: ItemStack, body: ItemStack.() -> Unit) =
+public inline fun item(copy: ItemStack, body: ItemStack.() -> Unit): ItemStack =
     ItemStack(copy).apply(body)
 
 /**
@@ -25,7 +23,7 @@ inline fun item(copy: ItemStack, body: ItemStack.() -> Unit) =
  *
  * @see itemMeta
  */
-inline fun <reified T : ItemMeta> ItemStack.meta(body: T.() -> Unit) {
+public inline fun <reified T : ItemMeta> ItemStack.meta(body: T.() -> Unit) {
     val newMeta = itemMeta(type, body)
     itemMeta = newMeta
 }
@@ -34,11 +32,10 @@ inline fun <reified T : ItemMeta> ItemStack.meta(body: T.() -> Unit) {
  * Creates an [EnchantmentNode] for this ItemStack, applies the given
  * body and adds all enchantments configured to this ItemStack.
  */
-inline fun ItemStack.enchant(unsafe: Boolean = false, body: EnchantmentNode.() -> Unit) {
+public inline fun ItemStack.enchant(unsafe: Boolean = false, body: EnchantmentNode.() -> Unit) {
     val addMethod = if (unsafe) ::addUnsafeEnchantment else ::addEnchantment
     EnchantmentNode().apply(body).let {
-        it.set.forEach { container ->
-            val (enchantment, level) = container
+        it.set.forEach { (enchantment, level) ->
             addMethod(enchantment, level)
         }
     }

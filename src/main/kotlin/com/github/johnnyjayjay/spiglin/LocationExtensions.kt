@@ -4,20 +4,19 @@ import org.bukkit.Location
 import org.bukkit.util.Vector
 
 /** Returns a Location that is the result of this location plus the given vector */
-operator fun Location.plus(vector: Vector) =
+public operator fun Location.plus(vector: Vector): Location =
     clone().add(vector)
 
 /** Adds the given vector to this location */
-operator fun Location.plusAssign(vector: Vector) {
+public operator fun Location.plusAssign(vector: Vector) {
     add(vector)
 }
 
 /** Returns a Location that is the result of this location minus the given vector */
-operator fun Location.minus(vector: Vector) =
+public operator fun Location.minus(vector: Vector): Location =
     clone().subtract(vector)
 
 /** Subtracts the given vector from this location */
-operator fun Location.minusAssign(vector: Vector) {
+public operator fun Location.minusAssign(vector: Vector) {
     subtract(vector)
 }
-

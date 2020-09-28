@@ -7,14 +7,13 @@ import org.bukkit.scheduler.BukkitTask
 /**
  * Runs a task using [org.bukkit.scheduler.BukkitRunnable.runTask] or its asynchronous equivalent.
  *
- * @param plugin The instance of your plugin.
  * @param async Whether this task should be run asynchronously (true) or on the Bukkit thread (false).
  *              Default: false
  * @param task A function with a [BukkitRunnable] as its receiver that will be executed once when this is run.
  * @see org.bukkit.scheduler.BukkitRunnable.runTask
  * @see org.bukkit.scheduler.BukkitRunnable.runTaskAsynchronously
  */
-fun Plugin.run(async: Boolean = false, task: BukkitRunnable.() -> Unit): BukkitTask {
+public fun Plugin.run(async: Boolean = false, task: BukkitRunnable.() -> Unit): BukkitTask {
     val runnable = DelegatingRunnable(task)
     return if (async) {
         runnable.runTaskAsynchronously(this)
@@ -27,14 +26,13 @@ fun Plugin.run(async: Boolean = false, task: BukkitRunnable.() -> Unit): BukkitT
  * Runs a task using [org.bukkit.scheduler.BukkitRunnable.runTaskLater] or its asynchronous equivalent.
  *
  * @param ticks For how many ticks this task should be delayed.
- * @param plugin The instance of your plugin.
  * @param async Whether this task should be run asynchronously (true) or on the Bukkit thread (false).
  *              Default: false
  * @param task A function with a [BukkitRunnable] as its receiver that will be executed once when this is run.
  * @see org.bukkit.scheduler.BukkitRunnable.runTaskLater
  * @see org.bukkit.scheduler.BukkitRunnable.runTaskLaterAsynchronously
  */
-fun Plugin.delay(ticks: Long, async: Boolean = false, task: BukkitRunnable.() -> Unit): BukkitTask {
+public fun Plugin.delay(ticks: Long, async: Boolean = false, task: BukkitRunnable.() -> Unit): BukkitTask {
     val runnable = DelegatingRunnable(task)
     return if (async) {
         runnable.runTaskLaterAsynchronously(this, ticks)
@@ -48,7 +46,6 @@ fun Plugin.delay(ticks: Long, async: Boolean = false, task: BukkitRunnable.() ->
  *
  * @param delay For how many ticks this task should be delayed the first time. Default: 0
  * @param period The period in ticks in which this task should be executed. Default: 20
- * @param plugin The instance of your plugin.
  * @param async Whether this task should be run asynchronously (true) or on the Bukkit thread (false).
  *              Default: false
  * @param task A function with a [BukkitRunnable] as its receiver that will be
@@ -56,7 +53,7 @@ fun Plugin.delay(ticks: Long, async: Boolean = false, task: BukkitRunnable.() ->
  * @see org.bukkit.scheduler.BukkitRunnable.runTaskTimer
  * @see org.bukkit.scheduler.BukkitRunnable.runTaskTimerAsynchronously
  */
-fun Plugin.schedule(
+public fun Plugin.schedule(
     delay: Long = 0,
     period: Long = 20,
     async: Boolean = false,
@@ -76,7 +73,6 @@ fun Plugin.schedule(
  * @param progression The progression to follow, e.g. an [IntRange].
  * @param delay For how many ticks this task should be delayed the first time. Default: 0
  * @param period The period in ticks in which this task should be executed. Default: 20
- * @param plugin The instance of your plugin.
  * @param async Whether this task should be run asynchronously (true) or on the Bukkit thread (false).
  *              Default: false
  * @param task A function with a [BukkitRunnable] as its receiver that will be
@@ -84,7 +80,7 @@ fun Plugin.schedule(
  *             and as long as there are elements left to progress. The parameter represents the current
  *             element in this progression.
  */
-inline fun Plugin.repeat(
+public inline fun Plugin.repeat(
     progression: IntProgression,
     delay: Long = 0,
     period: Long = 20,

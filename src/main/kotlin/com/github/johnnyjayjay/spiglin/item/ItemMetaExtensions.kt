@@ -14,7 +14,7 @@ import java.lang.IllegalArgumentException
  *
  * @param T The ItemMeta type to be created.
  */
-inline fun <reified T : ItemMeta> itemMeta(material: Material, body: T.() -> Unit) =
+public inline fun <reified T : ItemMeta> itemMeta(material: Material, body: T.() -> Unit): T =
     Bukkit.getItemFactory().getItemMeta(material)
         .let { it as? T }
         ?.apply(body)
@@ -23,7 +23,7 @@ inline fun <reified T : ItemMeta> itemMeta(material: Material, body: T.() -> Uni
 /**
  * Returns the lore joined to a String with new lines, sets the lore by splitting the given String at \n.
  */
-var ItemMeta.stringLore: String?
+public var ItemMeta.stringLore: String?
     get() = lore?.joinToString("\n")
     set(value) {
         lore = value?.split(NEW_LINE_SPLIT)
@@ -33,7 +33,7 @@ var ItemMeta.stringLore: String?
  * @see ItemMeta.getDisplayName
  * @see ItemMeta.setDisplayName
  */
-var ItemMeta.name: String?
+public var ItemMeta.name: String?
     get() = if (hasDisplayName()) displayName else null
     set(value) {
         setDisplayName(value)
@@ -43,23 +43,23 @@ var ItemMeta.name: String?
  * @see ItemMeta.getCustomModelData
  * @see ItemMeta.setCustomModelData
  */
-var ItemMeta.modelData: Int?
+public var ItemMeta.modelData: Int?
     get() = if (hasCustomModelData()) customModelData else null
     set(value) {
         setCustomModelData(value)
     }
 
 /** Adds the given [ItemFlag]s to this ItemMeta. */
-fun ItemMeta.flags(vararg flags: ItemFlag) = addItemFlags(*flags)
+public fun ItemMeta.flags(vararg flags: ItemFlag): Unit = addItemFlags(*flags)
 
 /** Adds the given [ItemFlag] to this ItemMeta. */
-fun ItemMeta.flag(flag: ItemFlag) = addItemFlags(flag)
+public fun ItemMeta.flag(flag: ItemFlag): Unit = addItemFlags(flag)
 
 /**
  * Creates a new [Attributes] scope, applies the given body to it and adds the
  * configured attribute modifiers to this ItemMeta.
  */
-inline fun ItemMeta.attributes(body: Attributes.() -> Unit) {
+public inline fun ItemMeta.attributes(body: Attributes.() -> Unit) {
     val attributes = Attributes().apply(body)
     val modifiers = attributes.modifiers
     attributeModifiers = ArrayListMultimap.create(
@@ -71,7 +71,7 @@ inline fun ItemMeta.attributes(body: Attributes.() -> Unit) {
  * Creates an [EnchantmentNode] for this ItemMeta, applies the given
  * body and adds all enchantments configured to this ItemMeta.
  */
-inline fun ItemMeta.enchant(ignoringRestrictions: Boolean = false, body: EnchantmentNode.() -> Unit) {
+public inline fun ItemMeta.enchant(ignoringRestrictions: Boolean = false, body: EnchantmentNode.() -> Unit) {
     EnchantmentNode().apply(body).set.forEach {
         addEnchant(it.enchantment, it.level, ignoringRestrictions)
     }
@@ -82,37 +82,37 @@ inline fun ItemMeta.enchant(ignoringRestrictions: Boolean = false, body: Enchant
  *
  * @see org.bukkit.inventory.meta.ItemMeta.attributes
  */
-class Attributes {
+public class Attributes {
 
     private val _modifiers: Multimap<Attribute, AttributeModifier> = ArrayListMultimap.create()
 
     /**
      * A copy of the modifiers linked to this instance.
      */
-    val modifiers: Multimap<Attribute, AttributeModifier>
+    public val modifiers: Multimap<Attribute, AttributeModifier>
         get() = ArrayListMultimap.create(_modifiers)
 
     /**
      * Creates a [ModifierNode] for the given [Attribute] and returns it.
      */
-    fun modify(attribute: Attribute) = ModifierNode(attribute)
+    public fun modify(attribute: Attribute): ModifierNode = ModifierNode(attribute)
 
     /**
      * A class as a fluent interface to add attribute modifiers.
      */
-    inner class ModifierNode internal constructor(private val attribute: Attribute) {
+    public inner class ModifierNode internal constructor(private val attribute: Attribute) {
 
         /**
          * Adds the given [AttributeModifier] to this Attribute.
          */
-        infix fun with(modifier: AttributeModifier) {
+        public infix fun with(modifier: AttributeModifier) {
             _modifiers.put(attribute, modifier)
         }
 
         /**
          * Adds the given [AttributeModifier]s to this Attribute.
          */
-        infix fun with(modifiers: Iterable<AttributeModifier>) {
+        public infix fun with(modifiers: Iterable<AttributeModifier>) {
             this@Attributes._modifiers.putAll(attribute, modifiers)
         }
     }

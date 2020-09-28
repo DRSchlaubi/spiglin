@@ -8,20 +8,20 @@ import org.bukkit.plugin.PluginManager
 /**
  * @see Bukkit.getOnlinePlayers
  */
-val onlinePlayers: Collection<Player>
+public val onlinePlayers: Collection<Player>
     get() = Bukkit.getOnlinePlayers()
 
 /**
  * @see Bukkit.broadcastMessage
  */
-fun broadcast(message: String) = Bukkit.broadcastMessage(message)
+public fun broadcast(message: String): Int = Bukkit.broadcastMessage(message)
 
 /**
  * A singleton that delegates to [Bukkit.getServer]
  */
-object Server : Server by Bukkit.getServer()
+public object Server : Server by Bukkit.getServer()
 
 /**
  * A singleton that delegates to [Bukkit.getPluginManager]
  */
-object PluginManager : PluginManager by Bukkit.getPluginManager()
+public object PluginManager : PluginManager by Bukkit.getPluginManager()

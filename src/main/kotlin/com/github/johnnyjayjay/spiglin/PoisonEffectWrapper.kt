@@ -6,11 +6,11 @@ import org.bukkit.potion.PotionEffectType
 /**
  * @see PotionEffect constructor
  */
-fun effect(
+public fun effect(
     type: PotionEffectType,
     duration: Int = Int.MAX_VALUE,
     amplifier: Int = 1,
     ambient: Boolean = true,
     particles: Boolean = true,
     icon: Boolean = true
-) = PotionEffect(type, duration, amplifier, ambient, particles, icon)
+): PotionEffect = PotionEffect(type, duration, amplifier, ambient, particles, icon)

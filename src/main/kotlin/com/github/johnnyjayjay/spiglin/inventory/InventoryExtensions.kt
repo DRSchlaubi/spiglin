@@ -8,9 +8,13 @@ import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryType
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.InventoryHolder
+import org.bukkit.inventory.InventoryView
 import org.bukkit.inventory.ItemStack
 
-const val ROW_SIZE = 9
+/**
+ * The size of an inventory row.
+ */
+public const val ROW_SIZE: Int = 9
 
 /**
  * Creates an inventory of type [InventoryType.CHEST], applies the given body to it and returns it.
@@ -21,12 +25,12 @@ const val ROW_SIZE = 9
  * @param body A function with the new inventory as its receiver, used to configure the inventory and its contents.
  * @return An inventory created using [Bukkit.createInventory].
  */
-inline fun inventory(
+public inline fun inventory(
     rows: Int = 3,
     owner: InventoryHolder? = null,
     title: String = InventoryType.CHEST.defaultTitle,
     body: Inventory.() -> Unit
-) = Bukkit.createInventory(owner, ROW_SIZE * rows, title).apply(body)
+): Inventory = Bukkit.createInventory(owner, ROW_SIZE * rows, title).apply(body)
 
 /**
  * Iterates over the slots in this inventory. Other than [Inventory.forEach] or [Inventory.forEachIndexed]
@@ -34,7 +38,7 @@ inline fun inventory(
  *
  * @param action A function that is called with row and column of the current slot for each iteration.
  */
-inline fun Inventory.forEachSlot(action: (Int, Int) -> Unit) {
+public inline fun Inventory.forEachSlot(action: (Int, Int) -> Unit) {
     forEachSlotLinear {
         val (row, column) = it.toSlot()
         action(row, column)
@@ -48,14 +52,14 @@ inline fun Inventory.forEachSlot(action: (Int, Int) -> Unit) {
  * @param action A function that is called with the linear index of the current slot for each iteration.
  * @see slot
  */
-inline fun Inventory.forEachSlotLinear(action: (Int) -> Unit) {
+public inline fun Inventory.forEachSlotLinear(action: (Int) -> Unit) {
     for (slot in all) {
         action(slot)
     }
 }
 
 // TODO
-fun items(formatString: String, bindings: Map<Char, ItemStack?>): Array<ItemStack?> {
+public fun items(formatString: String, bindings: Map<Char, ItemStack?>): Array<ItemStack?> {
     val rows = formatString.split(NEW_LINE_SPLIT)
     return rows.asSequence()
         .map { it.toCharArray() }
@@ -70,7 +74,7 @@ fun items(formatString: String, bindings: Map<Char, ItemStack?>): Array<ItemStac
  * @throws IndexOutOfBoundsException If this inventory doesn't have the given slot.
  * @see slot
  */
-operator fun Inventory.get(index: Int): ItemStack? = contents[index]
+public operator fun Inventory.get(index: Int): ItemStack? = contents[index]
 
 /**
  * Sets the content of this inventory at the given linear position.
@@ -78,7 +82,7 @@ operator fun Inventory.get(index: Int): ItemStack? = contents[index]
  * @throws IndexOutOfBoundsException If this inventory doesn't have the given slot.
  * @see slot
  */
-operator fun Inventory.set(index: Int, item: ItemStack?) {
+public operator fun Inventory.set(index: Int, item: ItemStack?) {
     this.setItem(index, item)
 }
 
@@ -93,7 +97,7 @@ operator fun Inventory.set(index: Int, item: ItemStack?) {
  * @see column
  * @see all
  */
-operator fun Inventory.get(indices: Iterable<Int>) = indices.map { this[it] }
+public operator fun Inventory.get(indices: Iterable<Int>): List<ItemStack?> = indices.map { this[it] }
 
 /**
  * Sets this inventory's content at all given indices to the given ItemStack.
@@ -106,7 +110,7 @@ operator fun Inventory.get(indices: Iterable<Int>) = indices.map { this[it] }
  * @see column
  * @see all
  */
-operator fun Inventory.set(indices: Iterable<Int>, item: ItemStack?) {
+public operator fun Inventory.set(indices: Iterable<Int>, item: ItemStack?) {
     for (i in indices) {
         this[i] = item
     }
@@ -126,7 +130,7 @@ operator fun Inventory.set(indices: Iterable<Int>, item: ItemStack?) {
  * @see column
  * @see all
  */
-operator fun Inventory.set(indices: Iterable<Int>, items: Iterable<ItemStack?>) {
+public operator fun Inventory.set(indices: Iterable<Int>, items: Iterable<ItemStack?>) {
     val indexIterator = indices.iterator()
     val itemIterator = items.iterator()
     while (indexIterator.hasNext() && itemIterator.hasNext()) {
@@ -137,42 +141,42 @@ operator fun Inventory.set(indices: Iterable<Int>, items: Iterable<ItemStack?>) 
 /**
  * @see Inventory.addItem
  */
-operator fun Inventory.plusAssign(item: ItemStack) {
+public operator fun Inventory.plusAssign(item: ItemStack) {
     this.addItem(item)
 }
 
 /**
  * @see Inventory.addItem
  */
-operator fun Inventory.plusAssign(items: Iterable<ItemStack>) {
+public operator fun Inventory.plusAssign(items: Iterable<ItemStack>) {
     this.addItem(*items.toList().toTypedArray())
 }
 
 /**
  * @see Inventory.remove
  */
-operator fun Inventory.minusAssign(item: ItemStack) {
+public operator fun Inventory.minusAssign(item: ItemStack) {
     this.remove(item)
 }
 
 /**
  * @see Inventory.removeItem
  */
-operator fun Inventory.minusAssign(items: Iterable<ItemStack>) {
+public operator fun Inventory.minusAssign(items: Iterable<ItemStack>) {
     this.removeItem(*items.toList().toTypedArray())
 }
 
 /**
  * @see Inventory.remove
  */
-operator fun Inventory.minusAssign(material: Material) {
+public operator fun Inventory.minusAssign(material: Material) {
     this.remove(material)
 }
 
 /**
  * @see Player.openInventory
  */
-fun Inventory.openTo(player: Player) = player.openInventory(this)
+public fun Inventory.openTo(player: Player): InventoryView? = player.openInventory(this)
 
 /**
  * Returns an [IntRange] containing all the linear slots in the given row.
@@ -182,7 +186,7 @@ fun Inventory.openTo(player: Player) = player.openInventory(this)
  * @see set
  * @see get
  */
-fun Inventory.row(index: Int): IntRange {
+public fun Inventory.row(index: Int): IntRange {
     checkBounds(index, 0 until rows, "Row")
     val start = slot(index, 0)
     return start until start + ROW_SIZE
@@ -196,7 +200,7 @@ fun Inventory.row(index: Int): IntRange {
  * @see set
  * @see get
  */
-fun Inventory.column(index: Int): IntProgression {
+public fun Inventory.column(index: Int): IntProgression {
     checkBounds(index, 0 until 9, "Column")
     val start = slot(0, index)
     return start until (lastRowIndex * ROW_SIZE + index + 1) step 9
@@ -211,7 +215,7 @@ fun Inventory.column(index: Int): IntProgression {
  * @throws IllegalArgumentException If the padding is negative
  * @throws IndexOutOfBoundsException If the padding is too thick for this inventory
  */
-fun Inventory.borders(padding: Int = 0): Iterable<Int> {
+public fun Inventory.borders(padding: Int = 0): Iterable<Int> {
     Validate.isTrue(padding >= 0, "Padding must not be negative")
     val borders = mutableSetOf<Int>()
     for (i in 0..padding) {
@@ -226,26 +230,26 @@ fun Inventory.borders(padding: Int = 0): Iterable<Int> {
 /**
  * An [Iterable] containing the linear slot indices of the corners of this inventory.
  */
-val Inventory.corners: Iterable<Int>
+public val Inventory.corners: Iterable<Int>
     get() = slots(0 to 0, 0 to ROW_SIZE - 1, lastRowIndex to 0, lastRowIndex to ROW_SIZE - 1)
 
 /**
  * The index of the last row of this inventory, in a two-dimensional context.
  * Equivalent to rows - 1
  */
-val Inventory.lastRowIndex: Int
+public val Inventory.lastRowIndex: Int
     get() = rows - 1
 
 /**
  * All linear slot indices in this inventory.
  */
-val Inventory.all: IntRange
+public val Inventory.all: IntRange
     get() = contents.indices
 
 /**
  * The amount of rows in this inventory.
  */
-val Inventory.rows: Int
+public val Inventory.rows: Int
     get() = size / ROW_SIZE
 
 private fun checkBounds(index: Int, bounds: IntRange, name: String) {
@@ -253,4 +257,3 @@ private fun checkBounds(index: Int, bounds: IntRange, name: String) {
         throw IndexOutOfBoundsException("$name index out of bounds")
     }
 }
-
