@@ -18,6 +18,7 @@ The following components of the Bukkit API are covered and extended by this coll
 - Scheduler
 - Player
 - Vector & Location
+- Chat
 
 ### Items
 This EDSL makes the creation of custom items very simple and concise. 
@@ -218,6 +219,43 @@ val added = vector + otherVector
 val subtracted = vector - otherVector
 val dotProduct = vector * otherVector
 val crossProduct = vector x otherVector
+```
+
+### Chat
+You have extensions for using [The Chat Component API](https://www.spigotmc.org/wiki/the-chat-component-api/)
+```kotlin
+
+    // You can use bungeecords chat component api
+    player.sendMessage("hi") {
+        // And configure your chat component here
+        color = ChatColor.AQUA
+
+        // Or add events
+        clickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, "I am cool")
+        hoverEvent(HoverEvent.Action.SHOW_TEXT, "I am cool to")
+    }
+
+    // or you use the builder
+    val components = buildComponent("test") {
+        color(ChatColor.GREEN)
+        append("hi")
+
+        clickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, "I am cool")
+        hoverEvent(HoverEvent.Action.SHOW_TEXT, "I am cool to")
+    }
+    
+    player.sendMessage(components)
+    
+    // or directly send it
+    
+    player.createMessage("hi") {
+
+        color(ChatColor.GREEN)
+        append("hi")
+
+        clickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, "I am cool")
+        hoverEvent(HoverEvent.Action.SHOW_TEXT, "I am cool to")
+    }
 ```
 
 ### Javadoc/KDoc
