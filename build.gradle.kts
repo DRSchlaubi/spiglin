@@ -1,11 +1,13 @@
 import com.jfrog.bintray.gradle.BintrayExtension
-import java.util.*
+import java.net.URL
+import java.util.Date
 
 plugins {
     java
     id("com.jfrog.bintray") version "1.8.4"
     `maven-publish`
     kotlin("jvm") version "1.4.10"
+    id("org.jetbrains.dokka") version "1.4.10"
 }
 
 group = "com.github.johnnyjayjay"
@@ -14,7 +16,7 @@ version = "2.0.3"
 
 repositories {
     maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/")
-//    maven("https://oss.sonatype.org/content/repositories/snapshots")
+    jcenter()
     mavenCentral()
 }
 
@@ -41,13 +43,36 @@ tasks {
         from(sourceSets.main.get().allSource)
     }
 
-    javadoc {
-        isFailOnError = false
-    }
-
     javadocJar {
         archiveClassifier.set("javadoc")
-        from(javadoc)
+        from(dokkaHtml)
+    }
+
+    dokkaHtml {
+        outputDirectory.set(project.file("docs"))
+
+        dokkaSourceSets {
+            configureEach {
+                includeNonPublic.set(false)
+                displayName.set("JVM")
+                displayName.set("JVM")
+
+                sourceLink {
+                    localDirectory.set(file("src/main/kotlin"))
+                    remoteUrl.set(
+                        URL(
+                            "https://github.com/JohnnyJayJay/spiglin/tree/master/src/main/kotlin/"
+                        )
+                    )
+                    remoteLineSuffix.set("#L")
+                    jdkVersion.set(8)
+                    externalDocumentationLink {
+                        url.set(URL("https://example.com/docs/"))
+                        packageListUrl.set(URL("https://gist.githubusercontent.com/DRSchlaubi/3caea5a76e11eadacdbb40b15ace46f3/raw/fe977e83824aea50acf38203ec1b56881fe38611/package-list"))
+                    }
+                }
+            }
+        }
     }
 }
 

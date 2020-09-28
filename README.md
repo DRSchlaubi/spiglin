@@ -219,3 +219,6 @@ val subtracted = vector - otherVector
 val dotProduct = vector * otherVector
 val crossProduct = vector x otherVector
 ```
+
+### Javadoc/KDoc
+A [Dokka](https://github.com/Kotlin/Dokka) generated documentation can be found [here](https://johnnyjayjay.github.io/spiglin/spiglin)
