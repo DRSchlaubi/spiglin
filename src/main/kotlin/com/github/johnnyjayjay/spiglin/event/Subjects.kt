@@ -1,6 +1,7 @@
 package com.github.johnnyjayjay.spiglin.event
 
 import com.github.johnnyjayjay.spiglin.inventory.get
+import org.apache.commons.lang.Validate
 import org.bukkit.event.Event
 import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
@@ -23,8 +24,7 @@ import kotlin.reflect.KClass
 /**
  * Internal class
  */
-@PublishedApi
-internal object RetrieverRegistry {
+object RetrieverRegistry {
 
     private val entries: MutableSet<Entry<out Event>> = LinkedHashSet()
 
@@ -56,10 +56,10 @@ internal object RetrieverRegistry {
         add(PrepareItemCraftEvent::class) { setOf(it.inventory, it.recipe?.result) }
         add(InventoryCloseEvent::class) { setOf(it.inventory, it.player) }
         add(InventoryClickEvent::class) { setOf(it.inventory, it.currentItem, it.whoClicked) }
-        add(InventoryDragEvent::class) { HashSet(it.newItems.map { item -> item.value } + it.cursor + it.oldCursor + it.inventory) }
+        add(InventoryDragEvent::class) { HashSet(it.newItems.map { it.value } + it.cursor + it.oldCursor + it.inventory) }
         add(InventoryMoveItemEvent::class) { setOf(it.initiator, it.destination, it.item) }
         add(InventoryPickupItemEvent::class) { setOf(it.inventory, it.item.itemStack) }
-        add(BlockDropItemEvent::class) { HashSet(it.items.map { item -> item.itemStack } + it.player) }
+        add(BlockDropItemEvent::class) { HashSet(it.items.map { it.itemStack } + it.player) }
         add(BrewingStandFuelEvent::class) { setOf(it.fuel, it.block) }
         add(FurnaceBurnEvent::class) { setOf(it.fuel, it.block) }
         add(FurnaceSmeltEvent::class) { setOf(it.result, it.source, it.block) }
@@ -115,18 +115,19 @@ internal object RetrieverRegistry {
  *
  * @return The listener used to listen for events involving this object
  */
-public inline fun <reified T : Event> Any.on(
+inline fun <reified T : Event> Any.on(
     plugin: Plugin,
     priority: EventPriority = EventPriority.NORMAL,
     ignoreCancelled: Boolean = false,
     crossinline action: Listener.(T) -> Unit
 ): ExtendedListener<T> {
     val retriever = RetrieverRegistry.find(T::class)
-    requireNotNull(retriever) {
+    Validate.isTrue(
+        retriever != null,
         "Event " + T::class + " is not available"
-    }
+    )
     return plugin.hear(priority, ignoreCancelled) {
-        if (this@on in retriever(it)) {
+        if (this@on in retriever!!(it)) {
             action(it)
         }
     }
