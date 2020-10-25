@@ -12,7 +12,7 @@ import org.bukkit.command.CommandSender
  *                  The default implementation for this parameter just returns false.
  * @param children  A Map of command label -> CommandExecutor representing the direct children of this command.
  */
-open class DelegatingCommand(
+public open class DelegatingCommand(
     protected val default: CommandExecutor = invalidCommand,
     protected val children: Map<String, CommandExecutor>
 ) : CommandExecutor {
@@ -32,7 +32,7 @@ open class DelegatingCommand(
         return default.onCommand(sender, command, label, args)
     }
 
-    companion object {
+    public companion object {
         internal val invalidCommand = CommandExecutor { _, _, _, _ -> false }
     }
 }

@@ -21,10 +21,8 @@ import org.bukkit.event.world.WorldEvent
 import org.bukkit.plugin.Plugin
 import kotlin.reflect.KClass
 
-/**
- * Internal class
- */
-object RetrieverRegistry {
+@PublishedApi
+internal object RetrieverRegistry {
 
     private val entries: MutableSet<Entry<out Event>> = LinkedHashSet()
 
@@ -56,10 +54,10 @@ object RetrieverRegistry {
         add(PrepareItemCraftEvent::class) { setOf(it.inventory, it.recipe?.result) }
         add(InventoryCloseEvent::class) { setOf(it.inventory, it.player) }
         add(InventoryClickEvent::class) { setOf(it.inventory, it.currentItem, it.whoClicked) }
-        add(InventoryDragEvent::class) { HashSet(it.newItems.map { it.value } + it.cursor + it.oldCursor + it.inventory) }
+        add(InventoryDragEvent::class) { HashSet(it.newItems.map { item -> item.value } + it.cursor + it.oldCursor + it.inventory) }
         add(InventoryMoveItemEvent::class) { setOf(it.initiator, it.destination, it.item) }
         add(InventoryPickupItemEvent::class) { setOf(it.inventory, it.item.itemStack) }
-        add(BlockDropItemEvent::class) { HashSet(it.items.map { it.itemStack } + it.player) }
+        add(BlockDropItemEvent::class) { HashSet(it.items.map { item -> item.itemStack } + it.player) }
         add(BrewingStandFuelEvent::class) { setOf(it.fuel, it.block) }
         add(FurnaceBurnEvent::class) { setOf(it.fuel, it.block) }
         add(FurnaceSmeltEvent::class) { setOf(it.result, it.source, it.block) }
@@ -115,7 +113,7 @@ object RetrieverRegistry {
  *
  * @return The listener used to listen for events involving this object
  */
-inline fun <reified T : Event> Any.on(
+public inline fun <reified T : Event> Any.on(
     plugin: Plugin,
     priority: EventPriority = EventPriority.NORMAL,
     ignoreCancelled: Boolean = false,

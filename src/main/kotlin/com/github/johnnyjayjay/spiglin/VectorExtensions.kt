@@ -5,52 +5,52 @@ import kotlin.math.pow
 import kotlin.math.sqrt
 
 /** The Euclidian Norm of this vector. */
-val Vector.abs
+public val Vector.abs: Double
     get() = sqrt(x.pow(2) + y.pow(2) + z.pow(2))
 
 /** Returns a vector with x, y, z from this vector negated. */
-operator fun Vector.unaryMinus() =
+public operator fun Vector.unaryMinus(): Vector =
     clone().apply { x = -x; y = -y; z = -z; }
 
 /** Returns an unchanged copy of this vector. */
-operator fun Vector.unaryPlus() =
+public operator fun Vector.unaryPlus(): Vector =
     clone()
 
 /** Compares two vectors based on their Euclidian Norm (absolute value) */
-operator fun Vector.compareTo(other: Vector) =
+public operator fun Vector.compareTo(other: Vector): Int =
     this.abs.compareTo(other.abs)
 
 /** Returns a vector that is the result of this vector multiplied with the given scalar. */
-operator fun Vector.times(scalar: Number) =
+public operator fun Vector.times(scalar: Number): Vector =
     clone().multiply(scalar.toDouble())
 
 /** Multiplies this vector with the given scalar. */
-operator fun Vector.timesAssign(scalar: Number) {
+public operator fun Vector.timesAssign(scalar: Number) {
     multiply(scalar.toDouble())
 }
 
 /** Returns a vector that is the result of this vector plus the given vector. */
-operator fun Vector.plus(vector: Vector) =
+public operator fun Vector.plus(vector: Vector): Vector =
     clone().add(vector)
 
 /** Adds the given vector to this vector */
-operator fun Vector.plusAssign(vector: Vector) {
+public operator fun Vector.plusAssign(vector: Vector) {
     add(vector)
 }
 
 /** Returns a vector that is the result of this vector minus the given vector. */
-operator fun Vector.minus(vector: Vector) =
+public operator fun Vector.minus(vector: Vector): Vector =
     clone().subtract(vector)
 
 /** Subtracts the given vector from this vector */
-operator fun Vector.minusAssign(vector: Vector) {
+public operator fun Vector.minusAssign(vector: Vector) {
     subtract(vector)
 }
 
 /** Returns the dot product of this and another vector. */
-operator fun Vector.times(vector: Vector) =
+public operator fun Vector.times(vector: Vector): Double =
     clone().dot(vector)
 
 /** Returns the cross product of this and another vector. */
-infix fun Vector.x(vector: Vector) =
+public infix fun Vector.x(vector: Vector): Vector =
     clone().crossProduct(vector)

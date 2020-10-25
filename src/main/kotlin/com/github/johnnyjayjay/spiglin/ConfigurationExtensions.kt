@@ -17,5 +17,5 @@ import org.bukkit.configuration.serialization.ConfigurationSerializable
  *
  * @return the requested [ConfigurationSerializable] object or null if none is found
  */
-inline fun <reified T : ConfigurationSerializable> ConfigurationSection.getSerializable(path: String): T? =
+public inline fun <reified T : ConfigurationSerializable> ConfigurationSection.getSerializable(path: String): T? =
     getSerializable(path, T::class.java)

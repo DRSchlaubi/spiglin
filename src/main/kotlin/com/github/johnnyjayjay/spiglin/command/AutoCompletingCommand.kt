@@ -11,7 +11,7 @@ import org.bukkit.command.TabExecutor
  * @see DelegatingCommand
  * @see TabExecutor
  */
-class AutoCompletingCommand(default: CommandExecutor = invalidCommand, children: Map<String, CommandExecutor>) :
+public class AutoCompletingCommand(default: CommandExecutor = invalidCommand, children: Map<String, CommandExecutor>) :
     DelegatingCommand(default, children), TabExecutor {
 
     /**

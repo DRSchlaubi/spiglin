@@ -9,4 +9,4 @@ import com.github.johnnyjayjay.spiglin.command.DelegatingCommand as NewDelegatin
     "Commands have been moved to command package",
     ReplaceWith("DelegatingCommand", "com.github.johnnyjayjay.spiglin.command.DelegatingCommand")
 )
-typealias DelegatingCommand = NewDelegatingCommand
+public typealias DelegatingCommand = NewDelegatingCommand
